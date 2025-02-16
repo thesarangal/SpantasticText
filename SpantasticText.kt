@@ -1,10 +1,9 @@
-package sarangal.packagemanager.utils.extension
-
 import android.content.res.Configuration
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,11 +18,11 @@ import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
-import androidx.compose.material.Text
 import androidx.compose.ui.tooling.preview.Preview
-import sarangal.packagemanager.presentation.theme.MyAppTheme
+import com.security.myapplication.ui.theme.MyApplicationTheme
 
 /**
  * Spantastic Composable for Jetpack Compose
@@ -88,7 +87,14 @@ fun SpantasticText(
                         fontSize = spanModel.fontSize?.sp ?: defaultStyle.fontSize,
                         fontWeight = spanModel.fontWeight ?: defaultStyle.fontWeight,
                         fontFamily = spanModel.fontFamily ?: defaultStyle.fontFamily,
-                        textDecoration = if (spanModel.showUnderline) TextDecoration.Underline else null
+                        textDecoration = if (spanModel.showUnderline && spanModel.showStrikeThrough) {
+                            TextDecoration.Underline + TextDecoration.LineThrough
+                        } else if (spanModel.showUnderline) {
+                            TextDecoration.Underline
+                        } else if (spanModel.showStrikeThrough) {
+                            TextDecoration.LineThrough
+                        } else null,
+                        background = spanModel.backgroundColor
                     ),
                     start = startIndex,
                     end = endIndex
@@ -112,6 +118,7 @@ fun SpantasticText(
         } else {
             {}
         },
+        textAlign = TextAlign.Center,
         modifier = Modifier
             .fillMaxWidth()
             .then(
@@ -165,7 +172,9 @@ data class SpanModel(
     val fontWeight: FontWeight? = null,
     val fontFamily: FontFamily? = null,
     val showUnderline: Boolean = false,
-    val callbackKey: String? = null
+    val callbackKey: String? = null,
+    val showStrikeThrough: Boolean = false,
+    val backgroundColor: Color = Color.Unspecified
 )
 
 @Preview(
@@ -174,7 +183,7 @@ data class SpanModel(
 )
 @Composable
 fun HighlightTextPreviewLight() {
-    MyAppTheme {
+    MyApplicationTheme {
         Surface {
             SpantasticText(
                 fullString = "Jetpack Compose makes UI development fun!",
@@ -196,7 +205,7 @@ fun HighlightTextPreviewLight() {
 )
 @Composable
 fun HighlightTextPreviewDark() {
-    MyAppTheme {
+    MyApplicationTheme {
         Surface {
             SpantasticText(
                 fullString = "Jetpack Compose makes UI development fun!",
@@ -218,7 +227,7 @@ fun HighlightTextPreviewDark() {
 )
 @Composable
 fun ClickableTextPreviewLight() {
-    MyAppTheme {
+    MyApplicationTheme {
         Surface {
             SpantasticText(
                 fullString = "Click here to learn more.",
@@ -242,7 +251,7 @@ fun ClickableTextPreviewLight() {
 )
 @Composable
 fun ClickableTextPreviewDark() {
-    MyAppTheme {
+    MyApplicationTheme {
         Surface {
             SpantasticText(
                 fullString = "Click here to learn more.",
@@ -266,7 +275,7 @@ fun ClickableTextPreviewDark() {
 )
 @Composable
 fun MultiSpanTextPreviewLight() {
-    MyAppTheme {
+    MyApplicationTheme {
         Surface {
             SpantasticText(
                 fullString = "Learn Jetpack Compose with SpantasticText!",
@@ -299,7 +308,7 @@ fun MultiSpanTextPreviewLight() {
 )
 @Composable
 fun MultiSpanTextPreviewDark() {
-    MyAppTheme {
+    MyApplicationTheme {
         Surface {
             SpantasticText(
                 fullString = "Learn Jetpack Compose with SpantasticText!",
