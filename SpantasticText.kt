@@ -1,7 +1,6 @@
 import android.content.res.Configuration
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -13,36 +12,68 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import com.security.myapplication.ui.theme.MyApplicationTheme
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.sp
+import sarangal.packagemanager.presentation.theme.MyAppTheme
 
 /**
- * Spantastic Composable for Jetpack Compose
+ * A composable function that displays text with customizable spans, allowing for
+ * different styles and click actions within the same text.
  *
- * A utility composable to create styled and clickable spans within a text.
+ * ## Overview
+ * `SpantasticText` provides a way to create rich text layouts where specific
+ * portions of the text can have unique styles and be made clickable. This is
+ * achieved by defining `SpanModel` objects that specify the text to be styled,
+ * the desired style, and an optional callback key for click actions.
  *
- * ## Features:
- * - Apply custom styles (color, size, weight, underline, etc.) to specific parts of the text.
- * - Make specific parts of the text clickable and handle events with a callback.
- * - Use multiple spans within a single text for diverse styling.
+ * ## Features
+ * - **Styled Spans:** Apply custom styles (color, font size, font weight, font family,
+ *   underline) to specific parts of the text.
+ * - **Clickable Spans:** Make specific parts of the text clickable and handle
+ *   click events with a callback.
+ * - **Multiple Spans:** Use multiple spans within a single text for diverse styling
+ *   and click actions.
+ * - **Customizable Text:** Customize the overall text appearance with parameters like
+ *   color, font size, font style, font weight, font family, letter spacing, text
+ *   decoration, text alignment, line height, overflow, soft wrap, max lines, and
+ *   min lines.
+ * - **Text Layout:** Provides a callback to get the [TextLayoutResult] of the text.
  *
- * @param fullString The complete text to be displayed.
+ * ## Parameters
+ * @param text The complete text to be displayed.
+ * @param modifier The modifier to be applied to the text.
+ * @param color The color to be applied to the text.
+ * @param fontSize The font size to be applied to the text.
+ * @param fontStyle The font style to be applied to the text.
+ * @param fontWeight The font weight to be applied to the text.
+ * @param fontFamily The font family to be applied to the text.
+ * @param letterSpacing The letter spacing to be applied to the text.
+ * @param textDecoration The text decoration to be applied to the text.
+ * @param textAlign The text alignment to be applied to the text.
+ * @param lineHeight The line height to be applied to the text.
+ * @param overflow How visual overflow should be handled.
+ * @param softWrap Whether the text should break at soft line breaks.
+ * @param maxLines The maximum number of lines for the text to span.
+ * @param minLines The minimum number of lines for the text to span.
+ * @param onTextLayout Callback invoked when the text layout is calculated.
+ * @param style The default text style applied to the entire text. Defaults to [LocalTextStyle.current].
  * @param spanModels A list of [SpanModel] that defines the spans and their styles.
- * @param defaultStyle The default text style applied to the entire text. Defaults to MaterialTheme.typography.body1.
  * @param onClick Callback invoked when a clickable span is tapped. The `callbackKey` of the span is passed to the callback.
  *
  * @sample usage:
  * ```
  * SpantasticText(
- *     fullString = "Click here to learn more.",
+ *     text = "Click here to learn more.",
  *     spanModels = listOf(
  *         SpanModel(
  *             spanString = "Click here",
@@ -63,38 +94,46 @@ import com.security.myapplication.ui.theme.MyApplicationTheme
  * Created by Rajat Sarangal
  *
  * @version
- * 1.0.0
+ * 1.0.1
  *
  * @since December 31, 2024
  * @link https://github.com/thesarangal/SpantasticText
  */
 @Composable
 fun SpantasticText(
-    fullString: String,
+    text: String,
+    modifier: Modifier = Modifier,
+    color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontStyle: FontStyle? = null,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    textDecoration: TextDecoration? = null,
+    textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
+    style: TextStyle = LocalTextStyle.current,
     spanModels: List<SpanModel>,
-    defaultStyle: TextStyle = MaterialTheme.typography.body1,
     onClick: ((String?) -> Unit)? = null
 ) {
     val annotatedString = buildAnnotatedString {
-        append(fullString)
+        append(text)
         spanModels.forEach { spanModel ->
-            val startIndex = fullString.indexOf(spanModel.spanString)
+            val startIndex = text.indexOf(spanModel.spanString)
             if (startIndex != -1) {
                 val endIndex = startIndex + spanModel.spanString.length
                 addStyle(
                     style = SpanStyle(
                         color = spanModel.color ?: Color.Unspecified,
-                        fontSize = spanModel.fontSize?.sp ?: defaultStyle.fontSize,
-                        fontWeight = spanModel.fontWeight ?: defaultStyle.fontWeight,
-                        fontFamily = spanModel.fontFamily ?: defaultStyle.fontFamily,
-                        textDecoration = if (spanModel.showUnderline && spanModel.showStrikeThrough) {
-                            TextDecoration.Underline + TextDecoration.LineThrough
-                        } else if (spanModel.showUnderline) {
-                            TextDecoration.Underline
-                        } else if (spanModel.showStrikeThrough) {
-                            TextDecoration.LineThrough
-                        } else null,
-                        background = spanModel.backgroundColor
+                        fontSize = spanModel.fontSize?.sp ?: style.fontSize,
+                        fontWeight = spanModel.fontWeight ?: style.fontWeight,
+                        fontFamily = spanModel.fontFamily ?: style.fontFamily,
+                        textDecoration = if (spanModel.showUnderline) TextDecoration.Underline else null
                     ),
                     start = startIndex,
                     end = endIndex
@@ -109,18 +148,34 @@ fun SpantasticText(
         }
     }
 
-    var layoutResult: TextLayoutResult? by remember { mutableStateOf(null) }
+    var layoutResult by remember { mutableStateOf<TextLayoutResult?>(null) } // Corrected: Use a different name for the lambda parameter
+
+    val innerOnTextLayout: (TextLayoutResult) -> Unit = { newLayoutResult ->
+
+        // Store the layout result for tap detection
+        layoutResult = newLayoutResult // Corrected: Assign to the state variable
+
+        // Call the outer onTextLayout if provided
+        onTextLayout?.invoke(newLayoutResult)
+    }
 
     Text(
         text = annotatedString,
-        onTextLayout = if (onClick != null) {
-            { layoutResult = it }
-        } else {
-            {}
-        },
-        textAlign = TextAlign.Center,
-        modifier = Modifier
-            .fillMaxWidth()
+        color = color,
+        fontSize = fontSize,
+        fontStyle = fontStyle,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        overflow = overflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        minLines = minLines,
+        onTextLayout = innerOnTextLayout,
+        modifier = modifier
             .then(
                 if (onClick != null) {
                     Modifier.pointerInput(Unit) {
@@ -141,10 +196,10 @@ fun SpantasticText(
                         }
                     }
                 } else {
-                    Modifier
+                    modifier
                 }
             ),
-        style = defaultStyle,
+        style = style,
     )
 }
 
@@ -172,9 +227,7 @@ data class SpanModel(
     val fontWeight: FontWeight? = null,
     val fontFamily: FontFamily? = null,
     val showUnderline: Boolean = false,
-    val callbackKey: String? = null,
-    val showStrikeThrough: Boolean = false,
-    val backgroundColor: Color = Color.Unspecified
+    val callbackKey: String? = null
 )
 
 @Preview(
@@ -183,10 +236,10 @@ data class SpanModel(
 )
 @Composable
 fun HighlightTextPreviewLight() {
-    MyApplicationTheme {
+    MyAppTheme {
         Surface {
             SpantasticText(
-                fullString = "Jetpack Compose makes UI development fun!",
+                text = "Jetpack Compose makes UI development fun!",
                 spanModels = listOf(
                     SpanModel(
                         spanString = "Jetpack Compose",
@@ -205,10 +258,10 @@ fun HighlightTextPreviewLight() {
 )
 @Composable
 fun HighlightTextPreviewDark() {
-    MyApplicationTheme {
+    MyAppTheme {
         Surface {
             SpantasticText(
-                fullString = "Jetpack Compose makes UI development fun!",
+                text = "Jetpack Compose makes UI development fun!",
                 spanModels = listOf(
                     SpanModel(
                         spanString = "Jetpack Compose",
@@ -227,10 +280,10 @@ fun HighlightTextPreviewDark() {
 )
 @Composable
 fun ClickableTextPreviewLight() {
-    MyApplicationTheme {
+    MyAppTheme {
         Surface {
             SpantasticText(
-                fullString = "Click here to learn more.",
+                text = "Click here to learn more.",
                 spanModels = listOf(
                     SpanModel(
                         spanString = "Click here",
@@ -251,10 +304,10 @@ fun ClickableTextPreviewLight() {
 )
 @Composable
 fun ClickableTextPreviewDark() {
-    MyApplicationTheme {
+    MyAppTheme {
         Surface {
             SpantasticText(
-                fullString = "Click here to learn more.",
+                text = "Click here to learn more.",
                 spanModels = listOf(
                     SpanModel(
                         spanString = "Click here",
@@ -275,10 +328,10 @@ fun ClickableTextPreviewDark() {
 )
 @Composable
 fun MultiSpanTextPreviewLight() {
-    MyApplicationTheme {
+    MyAppTheme {
         Surface {
             SpantasticText(
-                fullString = "Learn Jetpack Compose with SpantasticText!",
+                text = "Learn Jetpack Compose with SpantasticText!",
                 spanModels = listOf(
                     SpanModel(
                         spanString = "Learn",
@@ -308,10 +361,10 @@ fun MultiSpanTextPreviewLight() {
 )
 @Composable
 fun MultiSpanTextPreviewDark() {
-    MyApplicationTheme {
+    MyAppTheme {
         Surface {
             SpantasticText(
-                fullString = "Learn Jetpack Compose with SpantasticText!",
+                text = "Learn Jetpack Compose with SpantasticText!",
                 spanModels = listOf(
                     SpanModel(
                         spanString = "Learn",
