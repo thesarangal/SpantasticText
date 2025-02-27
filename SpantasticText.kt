@@ -94,7 +94,7 @@ import sarangal.packagemanager.presentation.theme.MyAppTheme
  * Created by Rajat Sarangal
  *
  * @version
- * 1.0.1
+ * 1.0.2
  *
  * @since December 31, 2024
  * @link https://github.com/thesarangal/SpantasticText
@@ -124,8 +124,12 @@ fun SpantasticText(
     val annotatedString = buildAnnotatedString {
         append(text)
         spanModels.forEach { spanModel ->
-            val startIndex = text.indexOf(spanModel.spanString)
-            if (startIndex != -1) {
+            var index = 0
+            while (index < text.length) {
+                val startIndex = text.indexOf(spanModel.spanString, index)
+                if (startIndex == -1) {
+                    break // No more occurrences
+                }
                 val endIndex = startIndex + spanModel.spanString.length
                 addStyle(
                     style = SpanStyle(
@@ -144,6 +148,7 @@ fun SpantasticText(
                     start = startIndex,
                     end = endIndex
                 )
+                index = endIndex // Move to the next position after the current span
             }
         }
     }
