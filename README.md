@@ -33,99 +33,99 @@ Kotlin
 
 ```
 SpantasticText(  
-    fullString = """  
+    text = """  
  SpantasticText makes styling effortless! Apply bold highlights,    underlines for emphasis, and strikethroughs for corrections.  
  Change colors, add backgrounds, or even create clickable actions! Need variety? Choose from different fonts like Serif, Monospace, or Cursive. Customize text sizes, from small to LARGE, and even detect invalid inputs like user@example. Click here to explore more: https://spantastic.docs. Remember: Beautiful text makes a better UI experience!""".trimIndent(),  
     spanModels = listOf(  
-        // Bold Text  
+        	// Bold Text  
 		SpanModel(  
-            spanString = "bold",  
-            color = Color.Blue,  
-            fontWeight = FontWeight.Bold  
+            		spanString = "bold",  
+            		color = Color.Blue,  
+            		fontWeight = FontWeight.Bold  
   		),  
   
-        // Underlined Text  
+        	// Underlined Text  
   		SpanModel(  
-            spanString = "underlines",  
-            color = Color.Red,  
-            showUnderline = true  
+            		spanString = "underlines",  
+            		color = Color.Red,  
+            		showUnderline = true  
   		),  
   
-        // Strikethrough Text  
+        	// Strikethrough Text  
   		SpanModel(  
-            spanString = "strikethroughs",  
-            color = Color.Gray,  
-            showStrikeThrough = true  
+            		spanString = "strikethroughs",  
+            		color = Color.Gray,  
+            		showStrikeThrough = true  
   		),  
   
-        // Color Text  
+        	// Color Text  
   		SpanModel(  
-            spanString = "colors",  
-            color = Color.Magenta  
-  ),  
-  
-        // Background Color Text  
-  		SpanModel(  
-            spanString = "backgrounds",  
-            backgroundColor = Color.LightGray  
+            		spanString = "colors",  
+            		color = Color.Magenta  
   		),  
   
-        // Clickable Action  
+        	// Background Color Text  
   		SpanModel(  
-            spanString = "clickable",  
-            color = Color.Green,  
-            showUnderline = true,  
-            callbackKey = "click_action"  
+            		spanString = "backgrounds",  
+            		backgroundColor = Color.LightGray  
   		),  
   
-        // Font Variations  
+        	// Clickable Action  
   		SpanModel(  
-            spanString = "Serif",  
-            fontFamily = FontFamily.Serif,  
-            fontSize = 18f  
-  		),  
-        SpanModel(  
-            spanString = "Monospace",  
-            fontFamily = FontFamily.Monospace,  
-            fontSize = 18f  
-  		),  
-        SpanModel(  
-            spanString = "Cursive",  
-            fontFamily = FontFamily.Cursive,  
-            fontSize = 18f  
+            		spanString = "clickable",  
+            		color = Color.Green,  
+            		showUnderline = true,  
+            		callbackKey = "click_action"  
   		),  
   
-        // Text Size Variations  
+        	// Font Variations  
   		SpanModel(  
-            spanString = "small",  
-            fontSize = 12f  
+            		spanString = "Serif",  
+            		fontFamily = FontFamily.Serif,  
+            		fontSize = 18f  
   		),  
-        SpanModel(  
-            spanString = "LARGE",  
-            fontSize = 24f,  
-            fontWeight = FontWeight.Bold  
+        	SpanModel(  
+            		spanString = "Monospace",  
+            		fontFamily = FontFamily.Monospace,  
+            		fontSize = 18f  
   		),  
-  
-        // Highlighting Invalid Input  
-  		SpanModel(  
-            spanString = "user@example",  
-            color = Color.Red,  
-            fontWeight = FontWeight.Bold  
-  		),  
-  
-        // Clickable URL  
-  		SpanModel(  
-            spanString = "https://spantastic.docs",  
-            color = Color.Blue,  
-            showUnderline = true,  
-            callbackKey = "docs_url"  
+        	SpanModel(  
+            		spanString = "Cursive",  
+            		fontFamily = FontFamily.Cursive,  
+            		fontSize = 18f  
   		),  
   
-        // Important Reminder  
+        	// Text Size Variations  
   		SpanModel(  
-            spanString = "Beautiful text",  
-            backgroundColor = Color.Yellow,  
-            fontWeight = FontWeight.Bold  
+            		spanString = "small",  
+            		fontSize = 12f  
+  		),  
+        	SpanModel(  
+            		spanString = "LARGE",  
+            		fontSize = 24f,  
+            		fontWeight = FontWeight.Bold  
+  		),  
+  
+        	// Highlighting Invalid Input  
+  		SpanModel(  
+            		spanString = "user@example",  
+            		color = Color.Red,  
+            		fontWeight = FontWeight.Bold  
+  		),  
+  
+        	// Clickable URL  
+  		SpanModel(  
+            		spanString = "https://spantastic.docs",  
+            		color = Color.Blue,  
+            		showUnderline = true,  
+            		callbackKey = "docs_url"  
+  		),  
+  
+        	// Important Reminder  
+  		SpanModel(  
+            		spanString = "Beautiful text",  
+            		backgroundColor = Color.Yellow,  
+            		fontWeight = FontWeight.Bold  
   		)  
     ),  
     onClick = { key ->  
